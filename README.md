@@ -3,7 +3,7 @@ A simple todo app with react, express and mongo
 
 ## System Configuration
 
-Please be sure you are using `node above 10.16.3lLTS`.
+Please be sure you are using `node above 10.16.3LTS`.
 
 ## Get Started
 
