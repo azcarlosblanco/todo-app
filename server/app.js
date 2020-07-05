@@ -1,20 +1,43 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require("express");
+const bodyParser = require("body-parser");
+const http = require("http");
+const Logger = require("morgan");
+const cors = require("cors");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const Routes = require("./routes");
+require("./db");
 
-var app = express();
+const app = express();
+const server = new http.Server(app);
+const port = 5000;
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  Logger(":date> :method :url - {:referrer} => :status (:response-time ms)")
+);
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  next();
+});
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use(Routes);
 
-module.exports = app;
+let datetime = new Date();
+server.listen(port, () => {
+  console.log(
+    ` => Server started on ${datetime} port http://localhost:${port}`
+  );
+});
+
+exports.server = server;

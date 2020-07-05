@@ -1,9 +1,17 @@
-var express = require('express');
-var router = express.Router();
+const express = require("express");
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+const {
+  getTodos,
+  addTodos,
+  deleteTodo,
+  updateTodo
+} = require("../services");
 
-module.exports = router;
+const todoRouter = express.Router();
+
+todoRouter.get("/api/todos", getTodos);
+todoRouter.post("/api/todos", addTodos);
+todoRouter.delete("/api/todos", deleteTodo);
+todoRouter.put("/api/todos", updateTodo);
+
+module.exports = todoRouter;
